@@ -1,23 +1,28 @@
-import logo from './logo.svg';
+import { React, useState } from "react";
 import './App.css';
+import List from "./components/List"
+import TextField from "@mui/material/TextField";
 
 function App() {
+  const [inputText, setInputText] = useState("");
+  let inputHandler = (e) => {
+    var lowerCase = e.target.value.toLowerCase();
+    setInputText(lowerCase);
+  };
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className="main">
+      <h1></h1>
+      <div className="search">
+        <TextField
+          id="outlined-basic"
+          onChange={inputHandler}
+          variant="outlined"
+          fullWidth
+          label="Search Book"
+        />
+      </div>
+      <List input={inputText}/>
+      
     </div>
   );
 }
