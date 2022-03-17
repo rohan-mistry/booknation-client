@@ -6,17 +6,11 @@ import Container from '@mui/material/Container';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import { Badge, IconButton, Box, Button } from '@mui/material';
 import { IsLogin } from './AuthRoutes/CheckLogin';
-import { Link, useNavigate } from 'react-router-dom';
 import MenuItem from '@mui/material/MenuItem';
 import Menu from '@mui/material/Menu';
-import MenuIcon from '@mui/icons-material/Menu';
-import SearchIcon from '@mui/icons-material/Search';
 import AccountCircle from '@mui/icons-material/AccountCircle';
-import MailIcon from '@mui/icons-material/Mail';
-import NotificationsIcon from '@mui/icons-material/Notifications';
-import MoreIcon from '@mui/icons-material/MoreVert';
 
-const Navbar = () => {
+const Navbar = ({cartLength}) => {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
 
@@ -114,8 +108,8 @@ const Navbar = () => {
           >
             Booknation
           </Typography>
-          <IconButton aria-label="cart" color="inherit">
-            <Badge color="error" badgeContent={4}>
+          <IconButton href="/cart" aria-label="cart" color="inherit">
+            <Badge color="error" badgeContent={cartLength}>
               <ShoppingCartIcon/>
             </Badge>
           </IconButton>
