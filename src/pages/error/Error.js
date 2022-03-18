@@ -1,15 +1,11 @@
-// import Head from 'next/head';
-// import NextLink from 'next/link';
 import { Box, Button, Container, Typography } from '@mui/material';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 
 const Error = () => (
-  <>
-    {/* <Head> */}
-      <title>
-        404 | Material Kit
-      </title>
-    {/* </Head> */}
+  <div>
+    <title>
+      404 | Material Kit
+    </title>
     <Box
       component="main"
       sx={{
@@ -54,23 +50,20 @@ const Error = () => (
               }}
             />
           </Box>
-          {/* <NextLink
+        
+          <Button
+            component="a"
+            startIcon={(<ArrowBackIcon fontSize="small" />)}
+            sx={{ mt: 3 }}
+            variant="contained"
             href="/"
-            passHref
-          > */}
-            <Button
-              component="a"
-              startIcon={(<ArrowBackIcon fontSize="small" />)}
-              sx={{ mt: 3 }}
-              variant="contained"
-            >
-              Go back to dashboard
-            </Button>
-          {/* </NextLink> */}
+          >
+            Go back to dashboard
+          </Button>
         </Box>
       </Container>
     </Box>
-  </>
+  </div>
 );
 
 export default Error;

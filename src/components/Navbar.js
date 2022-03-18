@@ -5,13 +5,15 @@ import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import { Badge, IconButton, Box, Button } from '@mui/material';
-import { IsLogin } from './AuthRoutes/CheckLogin';
 import MenuItem from '@mui/material/MenuItem';
 import Menu from '@mui/material/Menu';
 import AccountCircle from '@mui/icons-material/AccountCircle';
-import { removeUserFromStorage } from '../utils';
+import { AuthStatus, useAuth } from '../App';
+import { Link, useNavigate } from 'react-router-dom';
 
 const Navbar = ({cartLength}) => {
+  let auth = useAuth();
+  let navigate = useNavigate();
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
 
@@ -78,7 +80,7 @@ const Navbar = ({cartLength}) => {
       onClose={handleMobileMenuClose}
     >
       {
-        IsLogin()?<MenuItem 
+        auth.user?<MenuItem
           onClick={() => {
             handleMobileMenuClose();
             logout();
@@ -86,15 +88,30 @@ const Navbar = ({cartLength}) => {
         >
           Logout
         </MenuItem>:[
-        <MenuItem onClick={handleMobileMenuClose}>Login</MenuItem>,
-        <MenuItem onClick={handleMobileMenuClose}>Signup</MenuItem>].map(elem => elem)
+        <MenuItem
+          onClick={() => {
+            handleMobileMenuClose();
+            navigate("/signin");
+          }}
+        >
+          Login
+        </MenuItem>,
+        <MenuItem 
+          onClick={() => {
+            handleMobileMenuClose();
+            navigate("/signup")
+          }}
+        >
+          Signup
+        </MenuItem>].map(elem => elem)
       }
     </Menu>
   );
 
   const logout = () => {
-    removeUserFromStorage();
-    window.location.replace("/");
+    auth.signout(() => {
+      navigate("/");
+    });
   }
 
   return (
@@ -109,14 +126,20 @@ const Navbar = ({cartLength}) => {
           >
             Booknation
           </Typography>
-          <IconButton href="/cart" aria-label="cart" color="inherit">
-            <Badge color="error" badgeContent={cartLength}>
-              <ShoppingCartIcon/>
-            </Badge>
-          </IconButton>
+          <Box>
+            <AuthStatus/>
+          </Box>
+          <Link to="/cart">
+            <IconButton aria-label="cart" color="inherit">
+              <Badge color="error" badgeContent={cartLength}>
+                <ShoppingCartIcon/>
+              </Badge>
+            </IconButton>
+          </Link>
+          
           <Box sx={{display: { md:'flex', xs:'none' }}}>
             {
-                !IsLogin()?<>
+              !auth.user?<>
                   <Button color="inherit" href="/signin">Login</Button>
                   <Button color="inherit" href="/signup">SignUp</Button>
                 </>:<IconButton
