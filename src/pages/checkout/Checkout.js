@@ -15,6 +15,7 @@ import Review from './Review';
 import Copyright from '../../components/Copyright';
 import { Navigate, useLocation } from 'react-router-dom';
 import { IsLogin } from '../../components/AuthRoutes/CheckLogin';
+import { removeCartFromStorage } from '../../utils';
 
 const steps = ['Shipping address', 'Payment details', 'Review your order'];
 
@@ -41,9 +42,14 @@ export default function Checkout({cart}) {
     return <Navigate to="/signin" state={{ from: location }} replace />;
   }
 
+  if(cart.length === 0) {
+    console.log("here ",cart);
+    return <Navigate to="/" />;
+  }
+
   const handleNext = () => {
     if(activeStep == steps.length-1) {
-      localStorage.clear();
+      removeCartFromStorage();
     }
     setActiveStep(activeStep + 1);
   };
