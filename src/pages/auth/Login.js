@@ -34,7 +34,7 @@ export default function Login() {
     const result = response.data;
     localStorage.setItem('token',result.accessToken);
     localStorage.setItem('id', result.id);
-    navigate(from, { replace: true })
+    navigate(from, { replace: true });
   };
 
   return (

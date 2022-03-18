@@ -3,6 +3,7 @@ import React from 'react'
 import { styled } from '@mui/material/styles';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import RemoveCircleIcon from '@mui/icons-material/RemoveCircle';
+import { Link } from 'react-router-dom';
 
 const Img = styled('img')({
   margin: 'auto',
@@ -76,11 +77,12 @@ const Cart = ({ cart, updateItem, removeItem }) => {
                   <Button
                     variant="contained"
                     color="success"
-                    href="/checkout"
                     sx={{ mt: 3, ml: 1 }}
                     size="large"
                   >
-                    Checkout
+                    <Link to="/checkout">
+                      Checkout
+                    </Link>
                   </Button>
                 </Box>
           }

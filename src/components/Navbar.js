@@ -9,6 +9,7 @@ import { IsLogin } from './AuthRoutes/CheckLogin';
 import MenuItem from '@mui/material/MenuItem';
 import Menu from '@mui/material/Menu';
 import AccountCircle from '@mui/icons-material/AccountCircle';
+import { removeUserFromStorage } from '../utils';
 
 const Navbar = ({cartLength}) => {
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -92,7 +93,7 @@ const Navbar = ({cartLength}) => {
   );
 
   const logout = () => {
-    localStorage.clear();
+    removeUserFromStorage();
     window.location.replace("/");
   }
 
