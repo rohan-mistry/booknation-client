@@ -1,7 +1,9 @@
-import { Container, Grid } from '@mui/material'
-import React from 'react'
+import { Container, Grid, TextField } from '@mui/material'
+import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
 import ProductCard from '../../components/ProductCard'
+import List from '../../components/List';
+
 const dummyData = [
   {
     coverPhoto: "https://images-na.ssl-images-amazon.com/images/I/61Iz2yy2CKL.jpg",
@@ -19,12 +21,28 @@ const dummyData = [
     author: 'Robin Sharma',
     id: 2
   }
-]
+];
+
 const Home = () => {
+  const [inputText, setInputText] = useState("");
+  let inputHandler = (e) => {
+    var lowerCase = e.target.value.toLowerCase();
+    setInputText(lowerCase);
+  };
   return (
     <div>
       <Container sx={{ py: 8 }} maxWidth="lg">
-         <Grid container spacing={1}>
+        <div className="search">
+          <TextField
+            id="outlined-basic"
+            onChange={inputHandler}
+            variant="outlined"
+            fullWidth
+            label="Search Book"
+          />
+        </div>
+        <List input={inputText}/>
+        <Grid container spacing={1}>
           
             {
               dummyData.map(item => <Grid item xs={12} md={4} sm={6}>
