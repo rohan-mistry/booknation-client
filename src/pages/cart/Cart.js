@@ -74,17 +74,17 @@ const Cart = ({ cart, updateItem, removeItem }) => {
             cart.length == 0?<p align="center">
               No items present in the cart
             </p>: <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
+                <Link to="/checkout">
                   <Button
                     variant="contained"
                     color="success"
                     sx={{ mt: 3, ml: 1 }}
                     size="large"
                   >
-                    <Link to="/checkout">
-                      Checkout
-                    </Link>
+                    Checkout
                   </Button>
-                </Box>
+                </Link>
+              </Box>
           }
         </Grid>
         <Grid item md={4} xs={12}>

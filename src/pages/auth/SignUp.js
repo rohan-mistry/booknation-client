@@ -21,10 +21,6 @@ export default function SignUp() {
   const handleSubmit = async(event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-    console.log({
-      email: data.get('email'),
-      password: data.get('password'),
-    });
     try {
       const response = await axios.post('/api/auth/signup', {
         username: data.get('username'),
@@ -32,7 +28,6 @@ export default function SignUp() {
         email: data.get('email')
       },{headers: header});
       console.log(response.data);
-      // alert(response.data.message);
       navigate("/signin");
     } catch (error) {
       if(error.response) {

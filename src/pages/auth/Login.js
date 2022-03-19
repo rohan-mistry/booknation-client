@@ -12,29 +12,26 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import axios from 'axios';
-import { header } from '../../config';
 import Copyright from '../../components/Copyright';
+import { useAuth } from '../../App';
   
 const theme = createTheme();
 
 export default function Login() {
   let navigate = useNavigate();
   let location = useLocation();
+  const auth = useAuth();
 
   let from = location.state?.from?.pathname || "/";
   const handleSubmit = async(event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-    const response = await axios.post('/api/auth/signin', {
+    await auth.signin({
       username: data.get('username'),
       password: data.get('password'),
-    },{headers: header});
-    console.log(response.data);
-    const result = response.data;
-    localStorage.setItem('token',result.accessToken);
-    localStorage.setItem('id', result.id);
-    navigate(from, { replace: true });
+    },() => {
+      navigate(from, { replace: true });
+    })
   };
 
   return (

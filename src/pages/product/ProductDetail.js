@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { Button, Container, Grid, Typography } from '@mui/material'
-import { useLocation, useParams } from 'react-router-dom';
+import { Link, useLocation, useParams } from 'react-router-dom';
 
 const ProductDetail = ({addCartItem,checkItem}) => {
 
@@ -47,13 +47,14 @@ const ProductDetail = ({addCartItem,checkItem}) => {
                 onClick={() => handleAddItem()}
               >
                 Add to cart
-              </Button>:<Button
-                color="secondary"
-                variant='contained'
-                href="/cart"
-              >
-                Go to cart
-              </Button>
+              </Button>:<Link to="/cart">
+                <Button
+                  color="secondary"
+                  variant='contained'
+                >
+                  Go to cart
+                </Button>
+              </Link>
             }
           </div>
           <Typography variant="body1" gutterBottom>
