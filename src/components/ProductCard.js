@@ -17,7 +17,7 @@ const ProductCard = ({item}) => {
             />
             <CardContent>
                 <Typography gutterBottom variant="h5" component="div">
-                    {item.title}
+                    {item.name}
                 </Typography>
                 <Typography variant="body2" color="text.secondary">
                     &#8377; {item.price}

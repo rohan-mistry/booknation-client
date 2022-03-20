@@ -31,7 +31,7 @@ const Cart = ({ cart, updateItem, removeItem }) => {
                 </Grid>
                 <Grid item md={8} xs={8}>
                   <Typography variant="h6" gutterBottom component="div">
-                    {cartItem.item.title}
+                    {cartItem.item.name}
                   </Typography>
                   <div>
                     <b>&#8377; {cartItem.item.price}</b>

@@ -124,7 +124,7 @@ const Navbar = ({cartLength}) => {
             component="div"
             sx={{ flexGrow: 1, display: { md: 'flex' } }}
           >
-            Booknation
+            <Link to="/">Booknation</Link>
           </Typography>
           <Box>
             <AuthStatus/>
