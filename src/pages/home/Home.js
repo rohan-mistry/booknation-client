@@ -1,9 +1,11 @@
-import { Container, Grid, TextField } from '@mui/material'
-import React, { useState } from 'react'
+import { Container, Grid, IconButton, TextField } from '@mui/material'
+import React, { useState,useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import ProductCard from '../../components/ProductCard'
 import List from '../../components/List';
-
+import axios from 'axios';
+import SearchIcon from '@mui/icons-material/Search';
+import InputAdornment from '@mui/material/InputAdornment';
 const dummyData = [
   {
     coverPhoto: "https://images-na.ssl-images-amazon.com/images/I/61Iz2yy2CKL.jpg",
@@ -24,28 +26,73 @@ const dummyData = [
 ];
 
 const Home = () => {
+  const [bookName, setBookName] = useState("");
+  const [books, setbooks] = useState([])
   const [inputText, setInputText] = useState("");
   let inputHandler = (e) => {
     var lowerCase = e.target.value.toLowerCase();
-    setInputText(lowerCase);
+    setBookName(lowerCase);
   };
+  const fetchBooks = async() => {
+    try {
+      const response = await axios.get('/api/book/getBooks');
+      console.log(response.data);
+      const result = response.data;
+      setbooks(response.data);
+    } catch (error) {
+      console.log(error.response);
+      if(error.response && error.response.data){
+        console.log(error.response.data.message);
+      }
+    }
+  }
+  const searchBook = async() => {
+    try {
+      const response = await axios.get('/api/book/search',{params:{name:bookName}});
+      console.log(response.data);
+      const result = response.data;
+      setbooks(response.data);
+    } catch (error) {
+      console.log(error.response);
+      if(error.response && error.response.data){
+        console.log(error.response.data.message);
+      }
+    }
+  }
+  useEffect(() => {
+    fetchBooks();
+  }, []);
   return (
     <div>
       <Container sx={{ py: 8 }} maxWidth="lg">
         <div className="search">
           <TextField
+            InputProps={{
+              endAdornment: (
+                <InputAdornment position="end">
+                <IconButton
+                  aria-label="search"
+                  onClick={()=>searchBook()}
+                  edge="end"
+                >
+                 <SearchIcon/>
+                </IconButton>
+              </InputAdornment>
+              ),
+            }}
             id="outlined-basic"
             onChange={inputHandler}
             variant="outlined"
             fullWidth
+            value={bookName}
             label="Search Book"
           />
         </div>
-        <List input={inputText}/>
-        <Grid container spacing={1}>
+        
+        <Grid container spacing={1} sx={{mt:2}}>
           
             {
-              dummyData.map(item => <Grid item xs={12} md={4} sm={6}>
+              books.map(item => <Grid item xs={12} md={4} sm={6}>
                 <Link to={"/book/"+item.id} state={{ item }}>
                   <ProductCard item={item}/>
                 </Link>
