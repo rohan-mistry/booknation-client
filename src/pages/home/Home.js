@@ -2,7 +2,6 @@ import { Container, Grid, IconButton, TextField } from '@mui/material'
 import React, { useState,useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import ProductCard from '../../components/ProductCard'
-import List from '../../components/List';
 import axios from 'axios';
 import SearchIcon from '@mui/icons-material/Search';
 import InputAdornment from '@mui/material/InputAdornment';
@@ -36,11 +35,9 @@ const Home = () => {
   const fetchBooks = async() => {
     try {
       const response = await axios.get('/api/book/getBooks');
-      console.log(response.data);
       const result = response.data;
       setbooks(response.data);
     } catch (error) {
-      console.log(error.response);
       if(error.response && error.response.data){
         console.log(error.response.data.message);
       }
@@ -49,11 +46,9 @@ const Home = () => {
   const searchBook = async() => {
     try {
       const response = await axios.get('/api/book/search',{params:{name:bookName}});
-      console.log(response.data);
       const result = response.data;
       setbooks(response.data);
     } catch (error) {
-      console.log(error.response);
       if(error.response && error.response.data){
         console.log(error.response.data.message);
       }

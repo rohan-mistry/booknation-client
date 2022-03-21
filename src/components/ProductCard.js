@@ -13,13 +13,12 @@ const ProductCard = ({item}) => {
                 component="img"
                 height="196"
                 image={item.coverPhoto}
-                alt="green iguana"
             />
             <CardContent>
-                <Typography gutterBottom variant="h5" component="div">
+                <Typography data-testid="product_name" gutterBottom variant="h5" component="div">
                     {item.name}
                 </Typography>
-                <Typography variant="body2" color="text.secondary">
+                <Typography data-testid="product_price" variant="body2" color="text.secondary">
                     &#8377; {item.price}
                 </Typography>
             </CardContent>
