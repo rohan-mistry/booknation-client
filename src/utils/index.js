@@ -3,6 +3,5 @@ export const removeCartFromStorage = () => {
 }
 
 export const removeUserFromStorage = () => {
-    localStorage.removeItem('id');
     localStorage.removeItem('token');
 }
