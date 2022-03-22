@@ -1,6 +1,6 @@
 import React,{ useState, useEffect} from 'react';
 import Login from "./pages/auth/Login";
-import { BrowserRouter as Router, Navigate, Route, Routes, useLocation } from "react-router-dom";
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import Error from "./pages/error/Error";
 import Home from "./pages/home/Home";
 import SignUp from "./pages/auth/SignUp";
@@ -11,34 +11,22 @@ import axios from 'axios';
 import { header, tokenHeader } from './config';
 import Layout from './components/Layout';
 import OrderSucces from './pages/checkout/OrderSucces';
-
-function RequireAuth({ children }) {
-  let auth = useAuth();
-  let location = useLocation();
-
-  if (!auth.user) {
-    // Redirect them to the /login page, but save the current location they were
-    // trying to go to when they were redirected. This allows us to send them
-    // along to that page after they login, which is a nicer user experience
-    // than dropping them off on the home page.
-    return <Navigate to="/signin" state={{ from: location }} replace />;
-  }
-
-  return children;
-}
+import AdminDashboard from './pages/admin/home/AdminDashboard';
+import RequireAuthAdmin from './components/auth/RequireAuthAdmin';
+import Loader from './components/Loader';
+import RequireAuth from './components/auth/RequireAuth';
 
 let AuthContext = React.createContext();
 
-function AuthProvider({ children }) {
+function AuthProvider({ children, setIsLoading }) {
   let [user, setUser] = React.useState(null);
 
   let signin = async(data, callback) => {
     const response = await axios.post('/api/auth/signin', data, {headers: header});
-    console.log(response.data);
-    const result = response.data;
     setUser({
       username: response.data.username,
-      email: response.data.email
+      email: response.data.email,
+      roles: response.data.roles
     });
     localStorage.setItem('token', response.data.accessToken);
     callback();
@@ -55,14 +43,15 @@ function AuthProvider({ children }) {
   const fetchUserDetail = async() => {
     try {
       const response = await axios.get('/api/user/detail',{headers: tokenHeader});
-      console.log(response.data);
-      const result = response.data;
-      setUser(response.data);
+      const result = await response.data;
+      setUser(result);
+      setIsLoading(false);
     } catch (error) {
       console.log(error.response);
       if(error.response && error.response.data){
         console.log(error.response.data.message);
       }
+      setIsLoading(false);
     }
   }
 
@@ -71,6 +60,8 @@ function AuthProvider({ children }) {
     if(localStorage.getItem('token')) {
       //fetch user detail from this token;
       fetchUserDetail();
+    } else {
+      setIsLoading(false);
     }
   }, []);
   
@@ -95,12 +86,12 @@ export function AuthStatus() {
 }
 
 function App() {
-  const [cart, setCart] = useState([])
+  const [cart, setCart] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
   
   const addItem = (item) => {
-    let itemExists = cart.some(elem => elem.item.id==item.id);
+    let itemExists = cart.some(elem => elem.item.id === item.id);
     if(itemExists) {
-      console.log("item already exists");
       return;
     }
     let items = [...cart,{item,quantity: 1}];
@@ -112,14 +103,14 @@ function App() {
   const updateItem = (itemID, quantity) => {
     let cartCopy = [...cart]
 
-    let existentItem = cartCopy.find(elem => elem.item.id == itemID);
+    let existentItem = cartCopy.find(elem => elem.item.id === itemID);
     
     if (!existentItem) return
     
     existentItem.quantity += quantity;
 
     if (existentItem.quantity <= 0) {
-      cartCopy = cartCopy.filter(elem => elem.item.id != itemID)
+      cartCopy = cartCopy.filter(elem => elem.item.id !== itemID)
     }
     
     setCart(cartCopy);
@@ -131,7 +122,7 @@ function App() {
   const removeItem = (itemID) => {
     let items = [...cart]
   
-    items = items.filter(elem => elem.item.id != itemID);
+    items = items.filter(elem => elem.item.id !== itemID);
     
     setCart(items);
     
@@ -140,7 +131,7 @@ function App() {
   }
 
   const checkItem = (itemID) => {
-    let itemExists = cart.some(elem => elem.item.id == itemID);
+    let itemExists = cart.some(elem => elem.item.id === itemID);
     return itemExists;
   }
 
@@ -156,7 +147,8 @@ function App() {
 
   return (
     <div className="App">
-      <AuthProvider>
+      <AuthProvider setIsLoading={setIsLoading}>
+        {isLoading ? <Loader open={isLoading} />:
         <Router>
           <Routes>
             <Route element={<Layout/>}>
@@ -184,10 +176,19 @@ function App() {
                 }
               />
               <Route path="/order_successful" element={<OrderSucces/>}/>
+              {/* Admin Route */}
+              <Route 
+                path="/admin" 
+                element={
+                  <RequireAuthAdmin>
+                    <AdminDashboard/>
+                  </RequireAuthAdmin>
+                }
+              />
               <Route path="*" element={<Error/>}/>
             </Route>
           </Routes>
-        </Router>
+        </Router>}
       </AuthProvider>
     </div>
   );

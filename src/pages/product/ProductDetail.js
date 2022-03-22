@@ -17,7 +17,6 @@ const ProductDetail = ({addCartItem,checkItem}) => {
   const fetchBookById = async() => {
     try {
       const response = await axios.get('/api/book/getBookById/'+params.bookID);
-      console.log(response.data);
       const result = response.data;
       setitem(response.data);
       if(checkItem(Number(params.bookID))) {

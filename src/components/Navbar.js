@@ -11,11 +11,15 @@ import AccountCircle from '@mui/icons-material/AccountCircle';
 import { AuthStatus, useAuth } from '../App';
 import { Link, useNavigate } from 'react-router-dom';
 
-const Navbar = ({cartLength}) => {
+const Navbar = () => {
   let auth = useAuth();
   let navigate = useNavigate();
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
+
+  const UserIsAdmin = (roles) => {
+    return roles.some(role => role === "ROLE_ADMIN");
+  }
 
   const isMenuOpen = Boolean(anchorEl);
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
@@ -58,10 +62,31 @@ const Navbar = ({cartLength}) => {
         handleMenuClose();
         logout();
       }}>Logout</MenuItem>
+      {
+        auth.user && UserIsAdmin(auth.user.roles)?<MenuItem onClick={() => {
+          handleMenuClose();
+          navigate("/admin");
+        }}>Admin</MenuItem>:""
+      }
     </Menu>
   );
 
   const mobileMenuId = 'primary-search-account-menu-mobile';
+  
+  const menuOptions = [<MenuItem
+    onClick={() => {
+      handleMobileMenuClose();
+      logout();
+    }}
+  >
+    Logout
+  </MenuItem>];
+  if(auth.user && UserIsAdmin(auth.user.roles)) {
+    menuOptions.push(<MenuItem onClick={() => {
+      handleMobileMenuClose();
+      navigate("/admin");
+    }}>Admin</MenuItem>);
+  }
 
   const renderMobileMenu = (
     <Menu
@@ -80,14 +105,7 @@ const Navbar = ({cartLength}) => {
       onClose={handleMobileMenuClose}
     >
       {
-        auth.user?<MenuItem
-          onClick={() => {
-            handleMobileMenuClose();
-            logout();
-          }}
-        >
-          Logout
-        </MenuItem>:[
+        auth.user?menuOptions:[
         <MenuItem
           onClick={() => {
             handleMobileMenuClose();
@@ -103,7 +121,7 @@ const Navbar = ({cartLength}) => {
           }}
         >
           Signup
-        </MenuItem>].map(elem => elem)
+        </MenuItem>]
       }
     </Menu>
   );
@@ -131,7 +149,7 @@ const Navbar = ({cartLength}) => {
           </Box>
           <Link to="/cart">
             <IconButton aria-label="cart" color="inherit">
-              <Badge color="error" badgeContent={cartLength}>
+              <Badge color="error">
                 <ShoppingCartIcon/>
               </Badge>
             </IconButton>
