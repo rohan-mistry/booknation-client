@@ -43,9 +43,9 @@ export default function Review({cart}) {
     let sum = cart.reduce((prev,curr,index) => {
       return prev+curr.quantity*(curr.item.price);
     },0);
-    console.log("sum : ", sum);
     return sum;
   }
+  
   return (
     <React.Fragment>
       <Typography variant="h6" gutterBottom>
